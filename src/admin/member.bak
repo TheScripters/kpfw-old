@@ -1,0 +1,60 @@
+<?php
+// Code © 2006 KPFanWorld.com
+// Code written by Adam Humpherys
+/*******admin/member.php*********/
+if (!defined("Admin"))
+  {
+    header("HTTP/1.1 404 Not Found");
+    (file_exists("../404.shtml")) ? include("../404.shtml") : include("404.shtml");
+    exit;
+  }
+?>
+<h2>Member List</h2><br>
+<?php
+include("admin/menu.php");
+?>    <table align="center" rules="rows">
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Join Date</th>
+        <th>Last IP</th>
+        <th>Active</th>
+        <th>Key</th>
+        <th>User Level</th>
+      </tr>
+      <?php
+      $membercount = mysql_fetch_array(mysql_query("SELECT COUNT(*) AS memcnt FROM kpfw_users"));
+      if ($membercount['memcnt'] >= 31 && $_GET['pagenum'])
+        {
+          $multiplier = $_REQUEST['pagenum'] - 1;
+          $page = 30*$multiplier;
+        }
+       else
+        {
+          $page = 0;
+        }
+       $memberlist = mysql_query("SELECT * FROM kpfw_users ORDER BY UserId ASC LIMIT $page,30");
+       while($list = mysql_fetch_array($memberlist))
+         {
+           $joined = gmdate("M d Y",$list['Joined_Date']+$list['Time_Zone']);
+           echo "<tr><td align=\"center\"><a href=\"admin.php?page=users&user=".$list['UserName']."\" title=\"Modify\">".$list['UserName']."</a></td>\n";
+           echo "<td align=\"center\">".$list['UserEmail']."</td>\n";
+           echo "<td align=\"center\">".$list['Name']."</td>\n";
+           echo "<td align=\"center\">".$joined."</td>\n";
+           echo "<td align=\"center\">".$list['IP_Login']."</td>\n";
+           echo "<td align=\"center\">".$list['Active']."</td>\n";
+           echo "<td align=\"center\">".$list['Act_Key']."</td>\n";
+           echo "<td align=\"center\">".$list['UserLevel']."</td></tr>\n";
+         }
+       $next = ($_GET['pagenum'] >= 2) ? $_GET['pagenum']+1 : 2;
+       echo "<tr><td align=\"left\" colspan=\"4\">";
+       ($_GET['pagenum'] >= 2) ? print "<a href=\"admin.php?page=member&pagenum=".$multiplier."\">Previous Page</a>" : "";
+       echo "</td><td align=\"right\" colspan=\"4\">";
+       ($membercount['memcnt'] >= $page+30) ? print "<a href=\"admin.php?page=member&pagenum=".$next."\">Next Page</a>" : "";
+       echo "</td></tr>";
+      ?>
+    </table>
+    </td>
+  </tr>
+</table>

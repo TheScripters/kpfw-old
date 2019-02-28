@@ -1,0 +1,15 @@
+<html>
+<head>
+<title>Kim Possible Fan World .:::. Error</title>
+<base href="http://www.kpfanworld.com/">
+<link rel="stylesheet" type="text/css" href="includes/kpfw.css">
+</head>
+
+<body>
+<br><center><img src="images/kpfwlogo.jpg">
+<br><br><h1>File Not Found</h1>
+<br><font color="#FFFF00" size="4"><b>Requested URL (<!--#echo var="REQUEST_URI" --><?=$_SERVER['REQUEST_URI']?>) not available. If you clicked on a link on another site, the page may have been moved or removed.<br>If you clicked on a link on this site, please contact the management at <a href="mailto:staff@kpfanworld.com">staff@kpfanworld.com</a> to report the broken link.
+
+<br><br>Thank You.</center>
+</body>
+</html>

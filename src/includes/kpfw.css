@@ -1,0 +1,19 @@
+H1 {font-variant: small-caps; color: #FFFFFF; font-size: 36pt; text-decoration: underline; font-family: Arial; font-style: italic; text-align: center}
+H2 {text-decoration: underline; font-size: 26pt; font-variant: small-caps; text-align: center; color: #FFFFFF; font-family: Arial}
+H3 {color: #FFFFFF; font-family: Arial; font-size: 18pt; text-align: center}
+H4 {color: #FFFFFF; font-family: Arial; font-size: 13pt; text-align: center; text-decoration: underline; font-style: italic; margin: 5px}
+H6 {color: #FFFFFF; font-weight: normal; text-align: center}
+TH {color: #FFFFFF; font-size: 20pt; text-decoration: underline}
+TH.privmsg {color: #FFFFFF; font-size: 28pt; font-weight: bold; font-style: italic}
+TH.forum {color: lime; font-size: 16pt; text-align:center}
+TD.spoiler {font-size: 14pt}
+TD.link {font-size: 12pt; text-align: center}
+LI.spoiler {border-bottom: solid; border-width: 1px; border-color: #FFFF00; color: #000000; list-style: url("http://www.kpfanworld.com/images/kp-monogram.jpg")}
+P {text-indent: 20px; font-family: Arial; color: #FFFFFF; font-size: 12pt}
+A:link {color: #FFFF00}
+A:visited {color: #66CC66}
+A:active {color: #000000; background: #669966}
+A:hover {text-decoration: none}
+.text {color: #FFFFFF; font-family: Arial; font-size: 10pt}
+.spoiler {color: #000000; background: #000000}
+BODY {background-color: #000000; color: #FFFFFF}

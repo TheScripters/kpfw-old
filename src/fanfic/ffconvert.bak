@@ -1,0 +1,68 @@
+<?php
+// Code © 2006 KPFanWorld.com
+// Code written by Adam Humpherys
+/*******ffconvert.php************/
+/********************************/
+/***Fanfiction Conversion Tool***/
+include("./includes/functions.php");
+if (!$_SESSION['logged_in']){
+  header("Location:./login.php?r=ffconvert.php");
+} elseif ($_SESSION['logged_in'] && !$_REQUEST['user'] || !$_REQUEST['email'] && !$_REQUEST['action']) {
+  echo "<center>";
+  echo "<br><br><h1>FanFic Conversion</h1>\n";
+  echo "<form action=\"./ffconvert.php\" method=\"post\">\n";
+  echo "<b>KPFF UserName:</b> <input type=\"text\" name=\"user\"><br>\n";
+  echo "<b>KPFF Email:</b> <input type=\"text\" name=\"email\"><br>\n";
+  echo "<input type=\"submit\" value=\"Submit\"></form>";
+} elseif ($_SESSION['logged_in'] && $_REQUEST['user'] && $_REQUEST['email'] && !$_REQUEST['action']) {
+  $author = mysql_fetch_array(mysql_query("SELECT COUNT(*) AS cnt FROM kpff_authors WHERE AuthorName = '".$_REQUEST['user']."' AND AuthorEmail = '".$_REQUEST['email']."'"));
+  ($author['cnt'] == "0") ? header("Location: ./ffconvert.php") : "";
+  $ficsql = mysql_query("SELECT fanFicId,FicTitle FROM kpff_fics WHERE author = '".$_REQUEST['user']."' GROUP BY FicTitle ORDER BY fanFicId ASC");
+  echo "<center>";
+  echo "<br><br><h1>FanFic Conversion</h1>\n<form action=\"ffconvert.php\" method=\"post\">\n";
+  echo "<ul>";
+  while($fic = mysql_fetch_array($ficsql))
+    {
+      echo "<li><input type=\"checkbox\" name=\"fic[]\" value=\"".$fic['fanFicId']."\"> ".$fic['FicTitle']."</li>";
+      echo "<input type=\"hidden\" name=\"ficId[]\" value=\"".$fic['fanFicId']."\">\n";
+    }
+  echo "</ul>";
+  echo "<input type=\"radio\" name=\"action\" value=\"merge\"> Merge&nbsp;&nbsp;&nbsp;<input type=\"radio\" name=\"action\" value=\"continue\"> Continue<br>\n";
+  echo "<input type=\"submit\" value=\"Go\"></form>";
+} elseif ($_SESSION['logged_in'] && $_REQUEST['action'] == "merge" && !$_REQUEST['newfic']) {
+  echo "<center>";
+  echo "<br><br><h1>FanFic Conversion</h1>\n";
+  echo "<form action=\"./ffconvert.php?action=merge\" method=\"post\">\n";
+  foreach ($_REQUEST['fic'] as $fic)
+    {
+      $fictitle = mysql_fetch_array(mysql_query("SELECT FicTitle FROM kpff_fics WHERE fanFicId = '".$fic."'"));
+      echo "<input type=\"radio\" name=\"newfic\" value=\"".$fic."\"> ".$fictitle['FicTitle']."<br>\n";
+      echo "<input type=\"hidden\" name=\"oldfic[]\" value=\"".$fic."\">\n";
+    }
+  echo "<input type=\"submit\" value=\"Submit\"></form>";
+} elseif ($_SESSION['logged_in'] && $_REQUEST['newfic'] && $_GET['action'] == "merge") {
+  $fic = mysql_fetch_array(mysql_query("SELECT FicTitle FROM kpff_fics WHERE fanFicId = '".$_REQUEST['newfic']."'"));
+  foreach ($_REQUEST['oldfic'] as $old)
+    {
+      $sql = mysql_query("UPDATE kpff_fics SET FicTitle = '".$fic['FicTitle']."' WHERE fanFicId = '".$old."'");
+    }
+  $cnt = mysql_fetch_array(mysql_query("SELECT COUNT(*) AS cnt FROM kpff_fics WHERE FicTitle = '".$fic['FicTitle']."'"));
+  $sql = mysql_query("INSERT INTO kpfw_fftitles VALUES (NULL, '".$fic['FicTitle']."', '".$cnt['cnt']."', '".$_SESSION['userID']."')");
+  echo "<b>".$fic['FicTitle']."</b> successfully merged!<br>\n";
+  $ficId = mysql_insert_id();
+  $chapsql = mysql_query("SELECT chapter,ChapNum FROM kpff_fics WHERE FicTitle = '".$fic['FicTitle']."'");
+  while($chapter = mysql_fetch_array($chapsql))
+    {
+      $sql = mysql_query("INSERT INTO kpfw_ffchapter VALUES ('".$ficId."', '".$chapter['ChapNum']."', '".$_SESSION['userID']."', '".time()."', '".$chapter['chapter']."')");
+      echo $chapter['ChapNum']." ".$chapter['chapter']." successfully converted!<br>\n";
+    }
+  echo "Operation Completed!";
+  exit;
+} elseif ($_SESSION['logged_in'] && $_REQUEST['action'] == "continue") {
+  foreach ($_REQUEST['ficId'] as $fic)
+    {
+      $sql = "";
+    }
+}
+echo "</center>";
+?>

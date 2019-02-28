@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteRule ^fic/([0-9]+)/([0-9]+)?/?$ /fic.php?fic=$1&chap=$2 [QSA]
+RewriteRule ^fic/([0-9]+)?/?$ /fic.php?fic=$1 [QSA]
+RewriteRule ^fic/list$ /listing [R=301]
+RewriteRule ^add$ /addfic.php [QSA]
+RewriteRule ^listing?/?$ /listing.php [QSA]
+RewriteRule ^listing/chapters?/?$ listing.php?chapters=true [QSA]
+RewriteRule ^profile/([0-9A-Za-z]+)$ http://www.kpfanworld.com/profile/$1 [R=301]
+
+Options -Indexes
